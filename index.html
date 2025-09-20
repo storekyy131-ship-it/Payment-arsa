@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Payment • Aquero Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #060607;
+    --card: #0f1113;
+    --muted: #9aa3b2;
+    --accent: #7c4dff;
+    --accent2: #ff3d81;
+    --glass: rgba(255,255,255,0.03);
+    --radius: 14px;
+  }
+  *{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;color:#e8eef8}
+  html,body{height:100%;margin:0;background:
+    radial-gradient(800px 300px at 10% 10%, rgba(124,77,255,0.06), transparent 6%),
+    radial-gradient(700px 260px at 90% 90%, rgba(255,61,129,0.04), transparent 8%),
+    var(--bg);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  .wrap{max-width:980px;margin:36px auto;padding:22px;}
+  .panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:22px;border-radius:18px;box-shadow:0 12px 40px rgba(2,6,23,0.7);border:1px solid rgba(255,255,255,0.03)}
+
+  header{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+  .logo{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-weight:800;color:#fff;font-size:20px;box-shadow:0 8px 30px rgba(124,77,255,0.12)}
+  header h1{margin:0;font-size:20px}
+  header p{margin:0;color:var(--muted);font-size:13px}
+
+  .content{display:grid;grid-template-columns:1fr 360px;gap:18px}
+  @media (max-width:880px){ .content{grid-template-columns:1fr} }
+
+  /* left column */
+  .info{padding:10px 6px}
+  .store{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .store .icon{width:56px;height:56px;border-radius:10px;background:#0b0b0c;display:grid;place-items:center;font-weight:700;font-size:18px}
+  .store h2{margin:0}
+  .store small{color:var(--muted)}
+
+  .methods{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+  .method{display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:12px;background:var(--card);border:1px solid rgba(255,255,255,0.02)}
+  .method-left{display:flex;align-items:center;gap:12px}
+  .badge{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:grid;place-items:center;font-weight:700}
+  .meta .label{font-weight:700}
+  .meta .num{margin-top:4px;letter-spacing:1px;font-weight:700}
+  .meta .owner{margin-top:4px;color:var(--muted);font-size:13px}
+  .method-actions{display:flex;gap:8px;align-items:center}
+  .btn {
+    border:0;padding:9px 12px;border-radius:10px;font-weight:700;cursor:pointer;display:inline-flex;gap:8px;align-items:center;
+    background:transparent;color:#dfe9ff;border:1px solid rgba(255,255,255,0.03)
+  }
+  .btn.copy{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;border:0}
+  .btn.alt{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+  .btn:active{transform:translateY(1px)}
+
+  .note{margin-top:10px;color:var(--muted);font-size:13px}
+
+  /* right column - QRIS */
+  .qbox{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));border:1px solid rgba(255,255,255,0.03)}
+  .qbox img{width:220px;height:220px;object-fit:contain;border-radius:8px;border:8px solid #fff;padding:6px;background:#fff}
+  .qbox .txt{margin-top:12px;color:var(--muted);font-size:13px;text-align:center}
+  .qbox .links{margin-top:10px;display:flex;gap:8px}
+  .link{
+    padding:10px 12px;border-radius:10px;text-decoration:none;font-weight:700;border:0;cursor:pointer;
+    background:rgba(255,255,255,0.03);color:#fff;border:1px solid rgba(255,255,255,0.02);display:inline-flex;gap:8px;align-items:center
+  }
+  .link.primary{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;border:0}
+
+  footer{margin-top:16px;text-align:center;color:var(--muted);font-size:13px}
+
+  /* toast */
+  .toast{position:fixed;right:20px;bottom:20px;background:#0f1724;color:#e6fff3;padding:10px 14px;border-radius:10px;display:none;box-shadow:0 10px 30px rgba(2,6,23,0.7)}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="panel">
+      <header>
+        <div class="logo">AQ</div>
+        <div>
+          <h1>AQUERO STORE</h1>
+          <p>List Payment • Pilih dan salin nomor untuk memudahkan pembayaran</p>
+        </div>
+      </header>
+
+      <div class="content">
+        <!-- LEFT: Payment methods -->
+        <div class="info">
+          <div class="store">
+            <div class="icon">AQ</div>
+            <div>
+              <h2>Aqubo / Aquero Store</h2>
+              <small>Metode pembayaran resmi</small>
+            </div>
+          </div>
+
+          <div class="methods" aria-live="polite">
+            <!-- DANA -->
+            <div class="method" role="group" aria-label="DANA">
+              <div class="method-left">
+                <div class="badge" aria-hidden>
+                  <svg width="44" height="26" viewBox="0 0 44 26" xmlns="http://www.w3.org/2000/svg"><text x="2" y="18" fill="white" font-weight="700" font-size="12">DANA</text></svg>
+                </div>
+                <div class="meta">
+                  <div class="label">DANA</div>
+                  <div class="num" id="dana-num">083830919814</div>
+                  <div class="owner">AQUERO STORE</div>
+                </div>
+              </div>
+              <div class="method-actions">
+                <button class="btn copy" onclick="copyToClipboard('#dana-num')">Salin</button>
+                <a class="btn alt" href="tel:+6283830919814">Panggil</a>
+              </div>
+            </div>
+
+            <!-- GOPAY -->
+            <div class="method" role="group" aria-label="GOPAY">
+              <div class="method-left">
+                <div class="badge" aria-hidden>
+                  <svg width="44" height="26" viewBox="0 0 44 26" xmlns="http://www.w3.org/2000/svg"><text x="2" y="18" fill="white" font-weight="700" font-size="12">GOPAY</text></svg>
+                </div>
+                <div class="meta">
+                  <div class="label">GOPAY</div>
+                  <div class="num" id="gopay-num">083830919814</div>
+                  <div class="owner">AQUERO STORE</div>
+                </div>
+              </div>
+              <div class="method-actions">
+                <button class="btn copy" onclick="copyToClipboard('#gopay-num')">Salin</button>
+                <a class="btn alt" href="https://gopay.co.id" target="_blank" rel="noopener">Buka Gopay</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="note">Nomor pembayaran: <strong>083830919814</strong>. Pastikan memasukkan nominal & verifikasi nama penerima sebelum konfirmasi.</div>
+        </div>
+
+        <!-- RIGHT: QRIS -->
+        <aside class="qbox" id="qris-area">
+          <!-- Ganti qris.png dengan file QRIS Anda atau gunakan URL -->
+          <img id="qris-img" src="qris.png" alt="QRIS - scan untuk bayar (ganti qris.png dengan file QRIS Anda)">
+          <div class="txt">Scan untuk membayar langsung via QRIS</div>
+
+          <div class="links">
+            <a id="open-qris" class="link primary" href="qris.png" target="_blank" rel="noopener">Buka QRIS</a>
+            <a id="download-qris" class="link" href="qris.png" download="qris-aquero.png">Download</a>
+          </div>
+
+          <div style="margin-top:8px;color:var(--muted);font-size:13px;text-align:center">
+            Atau kunjungi tautan QRIS resmi.
+          </div>
+        </aside>
+      </div>
+
+      <footer>
+        <small>Butuh bantuan? Hubungi admin AQUERO STORE</small>
+      </footer>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite">Disalin ke clipboard</div>
+
+<script>
+  function copyToClipboard(selector){
+    const el = document.querySelector(selector);
+    if(!el) return;
+    const text = el.textContent.trim();
+    if(!text) return;
+    if(navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(()=> showToast('Nomor disalin: ' + text)).catch(()=> fallbackCopy(text));
+    } else {
+      fallbackCopy(text);
+    }
+  }
+
+  function fallbackCopy(text){
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position='fixed'; ta.style.left='-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      showToast('Nomor disalin: ' + text);
+    } catch(e){
+      alert('Salin manual: ' + text);
+    }
+    ta.remove();
+  }
+
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.display = 'block';
+    t.style.opacity = '1';
+    setTimeout(()=>{ t.style.transition='opacity 400ms'; t.style.opacity='0'; }, 1500);
+    setTimeout(()=>{ t.style.display = 'none'; t.style.transition=''; }, 2000);
+  }
+
+  // If qris image missing — show placeholder SVG
+  window.addEventListener('load', ()=>{
+    const img = document.getElementById('qris-img');
+    img.addEventListener('error', ()=>{
+      img.src = 'data:image/svg+xml;base64,' + btoa(
+        `<svg xmlns='http://www.w3.org/2000/svg' width='600' height='600' viewBox='0 0 600 600'>
+          <rect width='100%' height='100%' fill='#111'/>
+          <g fill='#888'>
+            <rect x='60' y='60' width='150' height='150' rx='12'/>
+            <rect x='390' y='60' width='150' height='150' rx='12'/>
+            <rect x='60' y='390' width='150' height='150' rx='12'/>
+            <text x='300' y='320' font-size='20' font-family='Inter,Arial' text-anchor='middle' fill='#bbb'>QRIS image not found</text>
+          </g>
+        </svg>`
+      );
+      // disable links that point to qris.png if not found
+      document.getElementById('open-qris').href = '#';
+      document.getElementById('download-qris').removeAttribute('href');
+    });
+  });
+</script>
+</body>
+</html>
